@@ -1,0 +1,36 @@
+<html>
+<head>
+    <title>RPS Client</title>
+</head>
+<body>
+<h1>RPS</h1>
+
+<h2>Game Id: <span id="gameId"></span></h2>
+
+<div id="gameStatus">
+</div>
+<div id="buttons" hidden>
+    <button>ROCK</button>
+    <button>PAPER</button>
+    <button>SCISSORS</button>
+</div>
+
+
+</body>
+<script src="socket.io/socket.io.js"></script>
+<script>
+    var socket = io();
+    socket.on('newGame', function (data) {
+        window.gameId = data.gameId;
+        document.getElementById('gameId').innerHTML = data.gameId;
+        document.getElementById('gameStatus').innerHTML = data.status;
+
+        console.log('listening on ' + data.gameId + '/ready');
+        socket.on(data.gameId + '/ready', function () {
+            console.log('ready');
+            document.getElementById('gameStatus').innerHTML = 'READY';
+            document.getElementById('buttons').removeAttribute('hidden');
+        });
+    });
+</script>
+</html>
